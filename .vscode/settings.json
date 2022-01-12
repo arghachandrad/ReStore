@@ -1,0 +1,16 @@
+{
+  "editor.defaultFormatter": "svipas.prettier-plus",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "html.format.wrapLineLength": 100,
+  "[javascript]": {
+    "editor.defaultFormatter": "svipas.prettier-plus"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "svipas.prettier-plus"
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.tabSize": 4
+  }
+}
