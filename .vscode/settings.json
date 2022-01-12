@@ -12,5 +12,7 @@
   "[csharp]": {
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.tabSize": 4
-  }
+  },
+  "editor.wordWrapColumn": 100,
+  "prettier.printWidth": 100
 }
