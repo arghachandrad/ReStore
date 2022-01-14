@@ -8,9 +8,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import axios from "axios";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import agent from "../../app/api/agent";
 import { Product } from "../../app/models/product";
 
 const ProductDetails = () => {
@@ -21,11 +22,12 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/${Number(id)}`);
+        const res = await agent.Catalog.details(Number(id));
         setLoading(false);
-        setProduct(res.data);
+        setProduct(res);
       } catch (error) {
-        console.log(error);
+        const { response } = error as AxiosError;
+        console.log(response);
         setLoading(false);
       }
     };
