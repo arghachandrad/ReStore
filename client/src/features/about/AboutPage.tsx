@@ -8,7 +8,16 @@ const AboutPage = () => {
         Errors for testing purposes
       </Typography>
       <ButtonGroup fullWidth>
-        <Button variant="contained" onClick={async () => await agent.TestErrors.get400Error()}>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            try {
+              return await agent.TestErrors.get400Error();
+            } catch (error) {
+              console.log(error);
+            }
+          }}
+        >
           Test 400 Error
         </Button>
         <Button variant="contained" onClick={async () => await agent.TestErrors.get401Error()}>

@@ -26,8 +26,7 @@ const ProductDetails = () => {
         setLoading(false);
         setProduct(res);
       } catch (error) {
-        const { response } = error as AxiosError;
-        console.log(response);
+        console.log(error);
         setLoading(false);
       }
     };

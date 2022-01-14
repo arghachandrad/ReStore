@@ -1,9 +1,38 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 
 axios.defaults.baseURL = "http://localhost:5000/api/";
 
 // Helper fundtion for getting actual data from axios response
 const responseBody = (response: AxiosResponse) => response.data;
+
+// AXIOS INTERCEPTOR - intercepting the response coming back from API
+// use(onFulfilled, onRejected) => onFulfilled we are returning the actual res, But onRejected(i.e. 400,500 range err) we are intercepting the res
+axios.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (error: AxiosError) => {
+    // must return error response also
+    // What interceptor is doing is intercepting the error and sending the actual Axios error response, now handle it in client side
+    const { data, status } = error.response!; // ! => overriding typescript type safety
+    switch (status) {
+      // 404 we will handle inside component
+      case 400:
+        toast.error(data.title);
+        break;
+      case 401:
+        toast.error(data.title);
+        break;
+      case 500:
+        toast.error(data.title);
+        break;
+      default:
+        break;
+    }
+    return Promise.reject(error.response);
+  }
+);
 
 // Reusable Object for diff type of requests
 const requests = {
