@@ -2,6 +2,9 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
 
+// For Creating a Delay so that we can see loading
+// const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
+
 axios.defaults.baseURL = "http://localhost:5000/api/";
 
 // Helper fundtion for getting actual data from axios response
@@ -10,7 +13,8 @@ const responseBody = (response: AxiosResponse) => response.data;
 // AXIOS INTERCEPTOR - intercepting the response coming back from API
 // use(onFulfilled, onRejected) => onFulfilled we are returning the actual res, But onRejected(i.e. 400,500 range err) we are intercepting the res
 axios.interceptors.response.use(
-  (res) => {
+  async (res) => {
+    // await sleep(); // creating a delay
     return res;
   },
   (error: AxiosError) => {

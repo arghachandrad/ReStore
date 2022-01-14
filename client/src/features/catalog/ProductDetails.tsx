@@ -12,6 +12,7 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
+import Loading from "../../app/layout/Loading";
 import { Product } from "../../app/models/product";
 
 const ProductDetails = () => {
@@ -34,7 +35,7 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <h3>Loading...</h3>;
+  if (loading) return <Loading message="Loading Product Details..." />;
 
   if (!product) return <h3>Product Not Found</h3>;
 
