@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Basket>> GetBasket()
+        public async Task<ActionResult<BasketDto>> GetBasket()
         {
             // when user creates a basket on out server, we will send them a BuyerId, which we send them as Cookie
             // traversing all the Baskets in DB and find that Buyer's basket using BuyerId
@@ -27,7 +28,23 @@ namespace API.Controllers
 
             if (basket == null) return NotFound();
 
-            return basket;
+            // Returning DTO instead of Basket(Removed serialisation object cycle error)
+            return new BasketDto
+            {
+                Id = basket.Id,
+                BuyerId = basket.BuyerId,
+                // Select => project our items into BasketItemDTO
+                Items = basket.Items.Select(item => new BasketItemDto
+                {
+                    ProductId = item.ProductId,
+                    Name = item.Product.Name,
+                    Price = item.Product.Price,
+                    PictureUrl = item.Product.PictureUrl,
+                    Type = item.Product.Type,
+                    Brand = item.Product.Brand,
+                    Quantity = item.Quantity
+                }).ToList() // to get List of BasketItemDTOs
+            };
         }
 
         [HttpPost]
