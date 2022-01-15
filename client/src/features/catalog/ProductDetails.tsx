@@ -8,7 +8,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
