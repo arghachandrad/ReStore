@@ -30,7 +30,7 @@ namespace API.Entities
 
             // if no item found
             if (item == null) return;
-
+            if (item.Quantity < quantity) return;
             item.Quantity -= quantity;
 
             // after reducing if quantity = 0, then remove it
