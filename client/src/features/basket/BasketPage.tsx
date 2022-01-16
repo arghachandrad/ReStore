@@ -10,31 +10,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import agent from "../../app/api/agent";
-import Loading from "../../app/layout/Loading";
-import { Basket } from "../../app/models/basket";
+import { useStoreContext } from "../../app/context/StoreContext";
 
 const BasketPage = () => {
-  const [loading, setLoading] = useState(true);
-  const [basket, setBasket] = useState<Basket | null>(null);
-
-  useEffect(() => {
-    // if user have buyerId in cookies then only can get Basket
-    const getBasket = async () => {
-      try {
-        const res = await agent.Basket.get();
-        setBasket(res);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
-    getBasket();
-  }, []);
-
-  if (loading) return <Loading message="Loading your Basket..." />;
+  const { basket } = useStoreContext();
 
   if (!basket) return <Typography variant="h3">Your basket is empty</Typography>;
 
