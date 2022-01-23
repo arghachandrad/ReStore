@@ -46,6 +46,14 @@ axios.interceptors.response.use(
         });
         // toast.error(data.title);
         break;
+      case 404:
+        // also need to send the server error to ServerError Component
+        history.push({
+          pathname: "/server-error",
+          state: { error: data },
+        });
+        // toast.error(data.title);
+        break;
       default:
         break;
     }
