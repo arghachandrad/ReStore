@@ -60,10 +60,16 @@ const BasketPage = () => {
                 <TableCell align="right">${(basketItem.price / 100).toFixed(2)}</TableCell>
                 <TableCell align="center">
                   <LoadingButton
-                    loading={status.includes("pendingRemoveItem" + basketItem.productId)}
+                    loading={status === "pendingRemoveItem" + basketItem.productId + "rem"}
                     color="error"
                     onClick={() =>
-                      dispatch(removeBasketItemAsync({ productId: basketItem.productId }))
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: basketItem.productId,
+                          quantity: 1,
+                          name: "rem",
+                        })
+                      )
                     }
                   >
                     <Remove />
@@ -71,7 +77,7 @@ const BasketPage = () => {
                   {basketItem.quantity}
                   <LoadingButton
                     color="success"
-                    loading={status.includes("pendingAddItem", basketItem.productId)}
+                    loading={status === "pendingAddItem" + basketItem.productId}
                     onClick={() =>
                       dispatch(addBasketItemAsync({ productId: basketItem.productId }))
                     }
@@ -85,12 +91,13 @@ const BasketPage = () => {
                 <TableCell align="right">
                   <LoadingButton
                     color="error"
-                    loading={status.includes("pendingRemoveItem" + basketItem.productId)}
+                    loading={status === "pendingRemoveItem" + basketItem.productId + "del"}
                     onClick={() =>
                       dispatch(
                         removeBasketItemAsync({
                           productId: basketItem.productId,
                           quantity: basketItem.quantity,
+                          name: "del",
                         })
                       )
                     }
