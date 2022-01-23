@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -17,11 +16,13 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { removeItem, setBasket } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 const BasketPage = () => {
-  const { basket, setBasket, removeItem } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
+  const dispatch = useAppDispatch();
   const [status, setStatus] = useState({
     loading: false,
     name: "",
@@ -31,7 +32,7 @@ const BasketPage = () => {
     setStatus({ ...status, loading: true, name });
     try {
       const basket = await agent.Basket.addItem(productId);
-      setBasket(basket);
+      dispatch(setBasket(basket));
       setStatus({ ...status, loading: false, name: "" });
     } catch (error) {
       console.log(error);
@@ -43,7 +44,7 @@ const BasketPage = () => {
     setStatus({ ...status, loading: true, name });
     try {
       await agent.Basket.removeItem(productId, quantity);
-      removeItem(productId, quantity);
+      dispatch(removeItem({ productId, quantity }));
       setStatus({ ...status, loading: false, name: "" });
     } catch (error) {
       console.log(error);

@@ -13,12 +13,14 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
 import Loading from "../../app/layout/Loading";
 import { Product } from "../../app/models/product";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { removeItem, setBasket } from "../basket/basketSlice";
 
 const ProductDetails = () => {
-  const { basket, setBasket, removeItem } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,7 +57,7 @@ const ProductDetails = () => {
       const updatedQuantity = item ? quantity - item.quantity : quantity;
       try {
         const response = await agent.Basket.addItem(product?.id!, updatedQuantity);
-        setBasket(response);
+        dispatch(setBasket(response));
         setSubmitting(false);
       } catch (error) {
         console.log(error);
@@ -65,7 +67,7 @@ const ProductDetails = () => {
       try {
         const updatedQuantity = item.quantity - quantity;
         await agent.Basket.removeItem(product?.id!, updatedQuantity);
-        removeItem(product?.id!, updatedQuantity);
+        dispatch(removeItem({ productId: product?.id!, quantity: updatedQuantity }));
         setSubmitting(false);
       } catch (error) {
         console.log(error);

@@ -13,13 +13,14 @@ import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import BasketPage from "../../features/basket/BasketPage";
 import Cookies from "js-cookie";
-import { useStoreContext } from "../context/StoreContext";
 import agent from "../api/agent";
 import Loading from "./Loading";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
+import { useAppDispatch } from "../store/configureStore";
+import { setBasket } from "../../features/basket/basketSlice";
 
 function App() {
-  const { setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ function App() {
       if (buyerId) {
         try {
           const basket = await agent.Basket.get();
-          setBasket(basket);
+          dispatch(setBasket(basket));
           setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -41,7 +42,7 @@ function App() {
     };
 
     setBasketOnAppInit();
-  }, [setBasket]);
+  }, [dispatch]);
   const [darkMode, setDarkMode] = useState(false);
   const paletteType = darkMode ? "dark" : "light";
 
