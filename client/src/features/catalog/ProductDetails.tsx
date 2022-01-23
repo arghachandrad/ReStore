@@ -12,37 +12,28 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import agent from "../../app/api/agent";
 import Loading from "../../app/layout/Loading";
-import { Product } from "../../app/models/product";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { addBasketItemAsync, removeBasketItemAsync, setBasket } from "../basket/basketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "../basket/basketSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 const ProductDetails = () => {
   const { basket, status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+  // using entity adaptor to get product By ID from out state(but need this to happen when we donot have product)
+  const product = useAppSelector((state) => productSelectors.selectById(state, id));
+  const { status: productStatus } = useAppSelector((state) => state.catalog);
   const [quantity, setQuantity] = useState(0);
   const item = basket?.items.find((i) => i.productId === product?.id); // checking whether item is in basket
 
   useEffect(() => {
     // if in basket this item is there then setting its quantity to this value
     if (item) setQuantity(item.quantity);
-    const fetchProduct = async () => {
-      try {
-        const res = await agent.Catalog.details(Number(id));
-        setLoading(false);
-        setProduct(res);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
 
-    fetchProduct();
-  }, [id, item]);
+    // if fetching product from state, then also if we donot have product, then call API(eg, reloading from productDetails page)
+    if (!product) dispatch(fetchProductAsync(parseInt(id)));
+  }, [id, item, dispatch, product]);
 
   const handleInputChange = (event: any) => {
     if (event.target.value >= 0) {
@@ -60,7 +51,7 @@ const ProductDetails = () => {
     }
   };
 
-  if (loading) return <Loading message="Loading Product Details..." />;
+  if (productStatus.includes("pending")) return <Loading message="Loading Product Details..." />;
 
   if (!product) return <h3>Product Not Found</h3>;
 
